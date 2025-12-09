@@ -1,0 +1,18 @@
+#cloud-config
+# KN04 Template - Basis für zukünftige Instanzen
+# Enthält SSH-Keys für mich und die Lehrperson (NUY)
+
+users:
+  - name: ubuntu
+    groups: [users, admin]
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+      # Mein persönlicher SSH-Key (ramadan1)
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCp6VL7vEwpGIx9Ka0v71w72vUUWP9Grfs3gfQLqR9s08eRniJmHRiU2lxHFiT9fdiEolVEsSyH8nnS6KTdfTgnwuoBh++agRIiEOti/l4a9rHOZTte8o+l1xBQcTAt6gPuaNHtbCeANkvvYnwQ/pHINq4lB+SioemEpMog3gVTUiNldXlHC3JuRyvTe55G93wRjxJ+SB5YCxEZRFS6XsE4IQSEEyrzyMffwRNpdbBHszz6hL/muWUFcSAJzPsXe88k8lnan8+nQlTnUYOghC+99rVJCRF/m7G2VDAW40GU7en9EYzCLXneeWTXqvwmwqknipsvEQ85T1PshcmcNSyv ramadan1
+      
+      # Lehrperson SSH-Key (NUY)
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0WGP1EZykEtv5YGC9nMiPFW3U3DmZNzKFO5nEu6uozEHh4jLZzPNHSrfFTuQ2GnRDSt+XbOtTLdcj26+iPNiFoFha42aCIzYjt6V8Z+SQ9pzF4jPPzxwXfDdkEWylgoNnZ+4MG1lNFqa8aO7F62tX0Yj5khjC0Bs7Mb2cHLx1XZaxJV6qSaulDuBbLYe8QUZXkMc7wmob3PM0kflfolR3LE7LResIHWa4j4FL6r5cQmFlDU2BDPpKMFMGUfRSFiUtaWBNXFOWHQBC2+uKmuMPYP4vJC9sBgqMvPN/X2KyemqdMvdKXnCfrzadHuSSJYEzD64Cve5Zl9yVvY4AqyBD lehrperson-nuy
+
+ssh_pwauth: false
+disable_root: false

@@ -1,0 +1,21 @@
+#cloud-config
+# Diese Zeile ist obligatorisch und muss immer die erste Zeile sein
+# Sie identifiziert die Datei als Cloud-init Konfiguration
+
+users: # Definiert Benutzerkonten, die auf dem System erstellt werden sollen
+  - name: ubuntu # Erstellt einen Benutzer mit dem Namen "ubuntu"
+    groups: [users, admin] # Fügt den Benutzer zu den Gruppen "users" und "admin" hinzu
+    shell: /bin/bash # Setzt die Standard-Shell auf Bash
+    sudo: ALL=(ALL) NOPASSWD:ALL # Gibt vollständige sudo-Rechte ohne Passwortabfrage
+    ssh_authorized_keys: # Liste der öffentlichen SSH-Schlüssel für Authentifizierung
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0WGP1EZykEtv5YGC9nMiPFW3U3DmZNzKFO5nEu6uozEHh4jLZzPNHSrfFTuQ2GnRDSt+XbOtTLdcj26+iPNiFoFha42aCIzYjt6V8Z+SQ9pzF4jPPzxwXfDdkEWylgoNnZ+4MG1lNFqa8aO7F62tX0Yj5khjC0Bs7Mb2cHLx1XZaxJV6qSaulDuBbLYe8QUZXkMc7wmob3PM0kflfolR3LE7LResIHWa4j4FL6r5cQmFlDU2BDPpKMFMGUfRSFiUtaWBNXFOWHQBC2+uKmuMPYP4vJC9sBgqMvPN/X2KyemqdMvdKXnCfrzadHuSSJYEzD64Cve5Zl9yVvY4AqyBD aws-key
+        # Öffentlicher SSH-Schlüssel für den Login ohne Passwort
+        # Format: ssh-rsa <key-data> <key-name>
+
+ssh_pwauth: false # Deaktiviert die Passwort-Authentifizierung über SSH
+disable_root: false # Root-Benutzer bleibt aktiv
+
+package_update: true # Aktualisiert die Paketliste beim ersten Start (apt update)
+packages: # Liste der zu installierenden Pakete
+  - curl # Kommandozeilen-Tool für Datenübertragung
+  - wget # Kommandozeilen-Tool zum Herunterladen von Dateien

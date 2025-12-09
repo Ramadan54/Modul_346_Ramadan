@@ -1,0 +1,50 @@
+#cloud-config
+# KN04 - Datenbank-Server
+# Installiert und konfiguriert MariaDB
+
+users:
+  - name: ubuntu
+    groups: [users, admin]
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+      # Dein Key
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCp6VL7vEwpGIx9Ka0v71w72vUUWP9Grfs3gfQLqR9s08eRniJmHRiU2lxHFiT9fdiEolVEsSyH8nnS6KTdfTgnwuoBh++agRIiEOti/l4a9rHOZTte8o+l1xBQcTAt6gPuaNHtbCeANkvvYnwQ/pHINq4lB+SioemEpMog3gVTUiNldXlHC3JuRyvTe55G93wRjxJ+SB5YCxEZRFS6XsE4IQSEEyrzyMffwRNpdbBHszz6hL/muWUFcSAJzPsXe88k8lnan8+nQlTnUYOghC+99rVJCRF/m7G2VDAW40GU7en9EYzCLXneeWTXqvwmwqknipsvEQ85T1PshcmcNSyv ramadan1
+      
+      # Lehrperson Key (NUY)
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0WGP1EZykEtv5YGC9nMiPFW3U3DmZNzKFO5nEu6uozEHh4jLZzPNHSrfFTuQ2GnRDSt+XbOtTLdcj26+iPNiFoFha42aCIzYjt6V8Z+SQ9pzF4jPPzxwXfDdkEWylgoNnZ+4MG1lNFqa8aO7F62tX0Yj5khjC0Bs7Mb2cHLx1XZaxJV6qSaulDuBbLYe8QUZXkMc7wmob3PM0kflfolR3LE7LResIHWa4j4FL6r5cQmFlDU2BDPpKMFMGUfRSFiUtaWBNXFOWHQBC2+uKmuMPYP4vJC9sBgqMvPN/X2KyemqdMvdKXnCfrzadHuSSJYEzD64Cve5Zl9yVvY4AqyBD lehrperson-nuy
+
+ssh_pwauth: false
+disable_root: false
+
+# Pakete installieren
+package_update: true
+packages:
+  - mariadb-server
+  - mariadb-client
+
+# SQL-Script für Datenbank-Setup
+write_files:
+  - path: /tmp/setup-database.sql
+    content: |
+      CREATE DATABASE IF NOT EXISTS m347;
+      CREATE USER IF NOT EXISTS 'admin'@'%' IDENTIFIED BY 'Ramadan2025!';
+      GRANT ALL PRIVILEGES ON m347.* TO 'admin'@'%';
+      FLUSH PRIVILEGES;
+
+# Befehle ausführen
+runcmd:
+  # Bind-Address ändern (externe Verbindungen erlauben)
+  - sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mariadb.conf.d/50-server.cnf
+  
+  # MariaDB Service neustarten
+  - systemctl restart mariadb
+  
+  # Warten bis Service bereit
+  - sleep 5
+  
+  # Datenbank einrichten
+  - mysql < /tmp/setup-database.sql
+  
+  # Status loggen
+  - systemctl status mariadb >> /var/log/cloud-init-output.log
